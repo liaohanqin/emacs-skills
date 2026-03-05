@@ -1,7 +1,7 @@
 {
   "name": "emacs-plugin",
   "version": "1.0.0",
-  "description": "Claude Code skills for Emacs integration",
+  "description": "CodeBuddy Code skills for Emacs integration",
   "author": {
     "name": "lynx",
     "email": "liaohanqin@qq.com"
