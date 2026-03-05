@@ -1,0 +1,23 @@
+{
+  "name": "emacs-plugin",
+  "version": "1.0.0",
+  "description": "Claude Code skills for Emacs integration",
+  "author": {
+    "name": "lynx",
+    "email": "liaohanqin@qq.com"
+  },
+  "homepage": "https://github.com/liaohanqin/emacs-skills",
+  "repository": "https://github.com/liaohanqin/emacs-skills",
+  "keywords": ["emacs"],
+  "category": "emacs",
+  "skills": [
+    "./skills/describe",
+    "./skills/dired",
+    "./skills/emacsclient",
+    "./skills/file-links",
+    "./skills/gnuplot",
+    "./skills/highlight",
+    "./skills/open",
+    "./skills/select"
+  ]
+}
