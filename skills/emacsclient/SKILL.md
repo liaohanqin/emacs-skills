@@ -30,7 +30,7 @@ The user has an Emacs server running. **All** Emacs operations must go through `
   emacsclient --eval '
   (progn
     (load "/path/to/test-file.el" nil t)
-    (ert-run-tests-batch-and-exit "pattern"))'
+    (ert-run-tests-batch "pattern"))'
   ```
 
 ## Rules
@@ -40,3 +40,4 @@ The user has an Emacs server running. **All** Emacs operations must go through `
 - Use `--eval` when evaluating elisp.
 - Always format `--eval` elisp across multiple lines with proper indentation.
 - Run `emacsclient` commands via the Bash tool.
+- On a live server, never use `ert-run-tests-batch-and-exit` or `kill-emacs`. The exit runner normally rejects interactive use; binding `noninteractive` to bypass that check can terminate the user's editor. Use `ert-run-tests-batch` instead, and keep expensive tests or pixel measurements out of the live session.
