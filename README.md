@@ -94,10 +94,28 @@ Search Apple Maps for restaurants, cafes, businesses, or landmarks via the [mapp
 
 ## Install
 
+### Claude Code
+
 ```sh
 claude plugin marketplace add xenodium/emacs-skills
 claude plugin install emacs-skills@xenodium-emacs-skills
 ```
+
+### DeepSeek Harness
+
+The repository is also a [dsh](https://github.com/deepseek-ai/deepseek-harness)
+bundle: `index.js` registers a skill provider on `ctx.skills` that serves the
+same `skills/` tree, so one checkout feeds every harness.
+
+```sh
+dsh plugin --profile acp add /path/to/emacs-skills
+```
+
+Skills whose frontmatter sets `disable-model-invocation: true` stay
+user-invocable only: they are loaded by typing `/dired`, `/open`, etc. at the
+start of a message and never appear in the model's skill catalog. The
+`emacsclient`, `file-links`, and `mappu` skills remain model-invocable and load
+automatically.
 
 ## Update
 

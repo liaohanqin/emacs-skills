@@ -1,0 +1,7 @@
+# DeepSeek Harness composition layer for the Emacs integration skills.
+#
+# The skills are discovered by the plugin module in ./index.js, which registers
+# itself as a provider on ctx.skills. Nothing else in the profile has to change.
+- insert:
+    - id: emacs-skills
+      name: "emacs-skills"

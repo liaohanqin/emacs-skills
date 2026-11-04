@@ -1,0 +1,22 @@
+{
+  "name": "emacs-skills",
+  "version": "1.0.0",
+  "description": "Emacs integration skills for agent harnesses (Claude Code, CodeBuddy, DeepSeek Harness)",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "skills"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "license": "MIT"
+}
