@@ -20,20 +20,43 @@ Create a diagram from the most recent interaction context using Mermaid. Generat
    The first returns a hex color like `"#eeffff"`. The second returns `dark` or `light`. Reuse both for all subsequent diagrams.
 3. Write a Mermaid file to a temporary file.
 4. Write a JSON config file that overrides theme variables with the queried foreground color. Set `"theme"` to `"dark"` or `"default"` based on the background mode.
-5. Run `mmdc` with `-t dark` if background mode is `dark`, or `-t default` if `light`.
-6. Output the result as a markdown image on its own line:
+5. Resolve the browser once per session (see "Resolving the browser" below) and keep the path in `CHROMIUM`.
+6. Run `mmdc` with `-t dark` if background mode is `dark`, or `-t default` if `light`.
+7. Output the result as a markdown image on its own line:
    ```
    ![description](/tmp/agent-diagram-XXXX.png)
    ```
 
 ```sh
-# Use -t dark for dark, -t default for light
-PUPPETEER_EXECUTABLE_PATH=/opt/homebrew/bin/chromium mmdc \
+# Use -t dark for dark, -t default for light.
+# CHROMIUM is the path resolved in step 5.
+PUPPETEER_EXECUTABLE_PATH="$CHROMIUM" mmdc \
   -i /tmp/agent-diagram-XXXX.mmd \
   -o /tmp/agent-diagram-XXXX.png \
   -t dark -b transparent --scale 2 \
   --configFile /tmp/agent-diagram-XXXX-config.json
 ```
+
+## Resolving the browser
+
+`mmdc` drives a headless browser through Puppeteer, which is not installed
+with the CLI (its postinstall is often skipped). Point it at a Chromium the
+machine already has instead of assuming a fixed path:
+
+```sh
+CHROMIUM=$(command -v chromium chromium-browser google-chrome google-chrome-stable 2>/dev/null | head -1)
+if [ -z "$CHROMIUM" ]; then
+  for p in /snap/bin/chromium /usr/bin/chromium /opt/homebrew/bin/chromium \
+           "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"; do
+    [ -x "$p" ] && CHROMIUM="$p" && break
+  done
+fi
+echo "CHROMIUM=${CHROMIUM:-NOT FOUND}"
+```
+
+Resolve it once per session and reuse it. If nothing is found, tell the user
+which of `chromium`, `google-chrome`, or `chromium-browser` to install rather
+than running `mmdc` and reporting its stack trace.
 
 ## Mermaid config template
 
@@ -77,7 +100,7 @@ sequenceDiagram
 
 - Query the Emacs foreground color once per session and reuse it for all subsequent diagrams. Only query again if the color is not already known.
 - Query the Emacs background mode once per session via `(frame-parameter nil 'background-mode)`. Use `-t dark` for `dark` or `-t default` for `light`. Always use `-b transparent --scale 2`.
-- Always use `PUPPETEER_EXECUTABLE_PATH=/opt/homebrew/bin/chromium` when invoking `mmdc`.
+- Resolve `CHROMIUM` once per session (see "Resolving the browser") and pass it as `PUPPETEER_EXECUTABLE_PATH` on every `mmdc` invocation. Never hard-code a single platform's path.
 - Always write a JSON config file with `themeVariables` set to the queried foreground color and pass it via `--configFile`.
 - Always use a timestamp in the filename (e.g., `/tmp/agent-diagram-$(date +%s).png`). Never use descriptive names.
 - After mmdc runs successfully, output a markdown image (`![description](path)`) on its own line.
